@@ -19,9 +19,8 @@ app.get("/notes", (req, res) =>
 );
 
 app.get("/api/notes", (req, res) =>
-  fs.readFile("db/db.json", "utf8", (error, res) =>
-  error ? console.error(error) : console.log(res)
-));
+  res.sendFile(path.join(__dirname, "db/db.json")),
+  );
 
 app.get("/api/notes", (req, res) =>
   fs.writeFile("db/db.json", `${res}`, (err) =>
@@ -50,5 +49,4 @@ app.post("/api/notes", (req, res) => {
     res.status(500).json("Error in posting review");
   }
 });
-
 app.listen(PORT, () => console.log(`App is listening at http://localhost:${PORT}`));
