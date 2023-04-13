@@ -22,11 +22,6 @@ app.get("/api/notes", (req, res) =>
   res.sendFile(path.join(__dirname, "db/db.json")),
   );
 
-app.get("/api/notes", (req, res) =>
-  fs.writeFile("db/db.json", `${res}`, (err) =>
-  err ? console.error(err) : console.log('Success!')
-));
-
 app.post("/api/notes", (req, res) => {
   console.info(`${req.method} request received to save note`);
 
@@ -44,6 +39,10 @@ app.post("/api/notes", (req, res) => {
     };
 
     console.log(response);
+
+    fs.appendFile("db/db.json", `[{${JSON.stringify(res.body)}}]`, (err) =>
+    err ? console.error(err) : console.log("Success!"));
+
     res.status(201).json(response);
   } else {
     res.status(500).json("Error in posting review");
