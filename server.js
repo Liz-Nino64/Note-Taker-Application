@@ -6,6 +6,8 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.get("/", (req, res) =>
@@ -17,25 +19,24 @@ app.get("/notes", (req, res) =>
 );
 
 app.get("/api/notes", (req, res) =>
-  fs.readFile("./db/db.json", "utf8", (error, res) =>
+  fs.readFile("db/db.json", "utf8", (error, res) =>
   error ? console.error(error) : console.log(res)
 ));
 
 app.get("/api/notes", (req, res) =>
-  fs.writeFile(".db/db.json", `${res}`, (err) =>
+  fs.writeFile("db/db.json", `${res}`, (err) =>
   err ? console.error(err) : console.log('Success!')
 ));
 
 app.post("/api/notes", (req, res) => {
   console.info(`${req.method} request received to save note`);
 
-  const { noteTitle, noteText } = req.body;
+  const { title, text } = req.body;
 
-  if (noteTitle && noteText) {
+  if (title && text) {
     const newNote = {
-      noteTitle,
-      noteText,
-      review_id: uuid(),
+      title,
+      text,
     };
 
     const response = {
