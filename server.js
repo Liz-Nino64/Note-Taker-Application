@@ -1,5 +1,5 @@
 const express = require("express")
-
+const fs = require("fs")
 const path = require("path");
 
 const PORT = process.env.PORT || 3001;
@@ -16,7 +16,17 @@ app.get("/notes", (req, res) =>
   res.sendFile(path.join(__dirname, "/public/notes.html"))
 );
 
-app.post("/notes", (req, res) => {
+app.get("/api/notes", (req, res) =>
+  fs.readFile("./db/db.json", "utf8", (error, res) =>
+  error ? console.error(error) : console.log(res)
+));
+
+app.get("/api/notes", (req, res) =>
+  fs.writeFile(".db/db.json", `${res}`, (err) =>
+  err ? console.error(err) : console.log('Success!')
+));
+
+app.post("/api/notes", (req, res) => {
   console.info(`${req.method} request received to save note`);
 
   const { noteTitle, noteText } = req.body;
